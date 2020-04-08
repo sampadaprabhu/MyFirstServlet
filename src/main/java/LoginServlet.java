@@ -9,29 +9,29 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 @WebServlet(
-        description="Login Servlet Testing",
+        description = "Login Servlet Testing",
         urlPatterns = {"/loginServlet"},
         initParams = {
-                @WebInitParam(name="user", value = "Sampada"),
-                @WebInitParam(name="password",value="123sampada!")
+                @WebInitParam(name = "user", value = "Sampada"),
+                @WebInitParam(name = "password", value = "adh@Sbns123")
         }
 )
 public class LoginServlet extends HttpServlet {
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-        String user=request.getParameter("user");
-        String pwd=request.getParameter("pwd");
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("text/html");
+        String user = request.getParameter("user");
+        String pwd = request.getParameter("pwd");
+        UserValidator userValidator=new UserValidator();
 
-        String userID=getServletConfig().getInitParameter("user");
-        String password=getServletConfig().getInitParameter("password");
-        if (userID.equals(user) && password.equals(pwd)){
-            request.setAttribute("user",user);
-            request.getRequestDispatcher("LoginSuccess.jsp").forward(request,response);
-        } else{
-            RequestDispatcher rd=getServletContext().getRequestDispatcher("/login.html");
-            PrintWriter out=response.getWriter();
+        if (userValidator.validateName(user) && userValidator.validatePassword(pwd)) {
+            request.setAttribute("user", user);
+            request.getRequestDispatcher("LoginSuccess.jsp").forward(request, response);
+        } else {
+            RequestDispatcher rd = getServletContext().getRequestDispatcher("/login.html");
+            PrintWriter out = response.getWriter();
             out.println("<font color=red>UserName Or Password Is Invalid!</font>");
-            rd.include(request,response);
+            rd.include(request, response);
         }
     }
 }
